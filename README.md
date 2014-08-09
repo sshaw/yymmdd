@@ -8,20 +8,21 @@ Small DSL for idiomatic date parsing and formatting.
 
     include YYMMDD
 
-    puts yy/mm        # Today's date 
-    puts ymd(411207)
+    puts yy/mm              # 14/08 (i.e., today's date)
+    puts yyyy/mm            # 2014/08
+    date = ymd(411207)      # Date.new(1941, 12, 7)
 
     date = Date.today
-    puts ymd(date)
-    puts yyyy.mm.dd(date)
-    puts dd/mm/yy(date)
+    puts ymd(date)          # 140809
+    puts yyyy.mm.dd(date)   # 2014.08.09
+    puts dd/mm/yy(date)     # 08/09/14
 
-    puts yyyy.mm.dd("1941.12.07")
-    puts mm.dd.yy("11.22.63")
-    puts mm/dd/yy("11/21/99")
-    puts mm/dd/yyyy("11/21/1999")
-    puts mm-dd-yyyy("11-21-1999")
-    puts m-d-y("11-21-99")
+    date = yyyy.mm.dd("1941.12.07")  # Date.new(1941, 12, 7)
+    date = mm.dd.yy("11.22.63")      # Date.new(1963, 11, 22)
+    date = mm/dd/yy("11/21/99")      # ...
+    date = mm/dd/yyyy("11/21/1999")
+    date = mm-dd-yyyy("11-21-1999")
+    date = m-d-y("11-21-99")
 
 ## Installation
 
@@ -44,6 +45,8 @@ When given a `String` it will attempt to parse it as the specified format and re
 
 When given a `Date` it will return a `String` in the specified format.
 
+An `ArgumentError` is raised if the date can't be parsed or formatted.
+
 All the heavy lifting is done by `Date#strftime` and `Date.strptime`.
 
 ## Caveats
@@ -57,6 +60,3 @@ Skye Shaw [sshaw AT gmail.com]
 ## License
 
 Released under the MIT License: www.opensource.org/licenses/MIT
-
-
-
