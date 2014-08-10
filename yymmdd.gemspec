@@ -5,9 +5,9 @@ Gem::Specification.new do |s|
   s.name        = "yymmdd"
   s.version     = YYMMDD::VERSION
   s.date        = Date.today
-  s.summary     = "Small DSL for idiomatic date parsing and formatting"
+  s.summary     = "Tiny DSL for idiomatic date parsing and formatting"
   s.description =<<-DESC
-    Small DSL for idiomatic parsing and formatting of numeric date components.
+    Tiny DSL for idiomatic parsing and formatting of numeric date components.
   DESC
   s.authors     = ["Skye Shaw"]
   s.email       = "skye.shaw@gmail.com"

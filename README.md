@@ -1,6 +1,6 @@
 # YYMMDD
 
-Small DSL for idiomatic date parsing and formatting.
+Tiny DSL for idiomatic date parsing and formatting.
 
 ## Overview
 
@@ -39,15 +39,59 @@ Small DSL for idiomatic date parsing and formatting.
 All functions are [`module_function`s](http://www.ruby-doc.org/core-2.1.2/Module.html#method-i-module_function)
 so you must `include YYMMDD` to use them.
 
-With no arguments it will return a `String` representing today's date in the specified format.
-
 When given a `String` it will attempt to parse it as the specified format and return a `Date`.
 
 When given a `Date` it will return a `String` in the specified format.
 
 An `ArgumentError` is raised if the date can't be parsed or formatted.
 
+With no arguments it will return an instance of a `String`-like object representing today's date in the specified format
+(it overrides `to_s` and `to_str`). In the most common cases you can treat it like a `String`:
+
+    date = yyyy/mm/dd
+	puts "Today's date: #{date}"
+    text = ["Dates: ", yy/mm, yyyy/mm].join(", ")
+	text = "A great date: " << date
+
+But in some instances you'll have to expilictly call `to_s`:
+
+    printf "Today's date: %s\n", date.to_s
+
 All the heavy lifting is done by `Date#strftime` and `Date.strptime`.
+
+### Format Specifiers
+
+The table below lists the available format specifiers. All of these can be separated by one of the supported
+delimiters; `"/"`, `"."`, or `"-"`.
+
+<table>
+  <thead>
+	<th>Name</th><th>Format</th>
+  </thead>
+  <tbody>
+	<tr>
+	  <td><code>d</code></td><td>day of the year, no 0 padding</td>
+	</tr>
+	<tr>
+	  <td><code>dd</code></td><td>day of the year</td>
+	</tr>
+	<tr>
+	  <td><code>m</code></td><td>day of the month, no 0 padding</td>
+	</tr>
+	<tr>
+	  <td><code>mm</code></td><td>day of the month</td>
+	</tr>
+	<tr>
+	  <td><code>y</code></td><td>2 digit year</td>
+	</tr>
+	<tr>
+	  <td><code>yy</code></td><td>2 digit year</td>
+	</tr>
+	<tr>
+	  <td><code>yyyy</code></td><td>4 digit year</td>
+	</tr>
+  </tbody>
+</table>
 
 ## Caveats
 

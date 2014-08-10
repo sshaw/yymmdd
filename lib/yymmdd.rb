@@ -28,21 +28,25 @@ module YYMMDD
   module_function :yyyymd
 
   class DatePart # :nodoc:
-    STRPTIME = {
+    # Output formats
+    STRFTIME = {
       "y"    => "%y",
       "yy"   => "%y",
       "yyyy" => "%Y",
-      "m"    => "%m",
+      "m"    => "%-m",
       "mm"   => "%m",
-      "d"    => "%d",
+      "d"    => "%-d",
       "dd"   => "%d"
     }.freeze
+
+    # Input formats, strptime() doesn't support "%-X" formats
+    STRPTIME = STRFTIME.merge("d" => "%d", "m" => "%m").freeze
 
     attr :format
     attr :date
 
     def initialize(format, date)
-      @format = STRPTIME[format]
+      @format = format
       @date = date
       @parts = [[self, ""]]
     end
@@ -67,6 +71,14 @@ module YYMMDD
       build_date.to_s
     end
 
+    def to_str
+      to_s
+    end
+
+    def inspect
+      to_s
+    end
+
     private
     def process(tok, part)
       @parts << [part, tok]
@@ -76,28 +88,15 @@ module YYMMDD
 
     def build_date
       date = @parts[-1][0].date || Date.today
-      fmt  = @parts.map { |part, tok| "#{tok}#{part.format}" }.join("")
+      date = date.to_s if date.is_a?(Fixnum)
 
-      date = date.to_s if date.is_a?(Fixnum)      
-      date.is_a?(Date) ? date.strftime(fmt) : Date.strptime(date, fmt)
+      if date.is_a?(Date)
+        fmt = @parts.map { |part, tok| sprintf("%s%s", tok, STRFTIME[part.format]) }.join("")
+        date.strftime(fmt)
+      else
+        fmt = @parts.map { |part, tok| sprintf("%s%s", tok, STRPTIME[part.format]) }.join("")
+        Date.strptime(date, fmt)
+      end
     end
   end
-end
-
-
-if $0 == __FILE__
-  include YYMMDD
-  date = Date.today
-
-  puts yy/mm
-  puts ymd(411207)
-  puts yyyy.mm.dd(date)
-  puts yyyy.mm.dd("1941.12.07")
-  puts mm.dd.yy("11.22.63")
-  puts dd/mm/yy("21/11/79")
-  puts dd/mm/yy(date)
-  puts mm/dd/yy("11/21/99")
-  puts mm/dd/yyyy("11/21/1999")
-  puts m-d-y("11-21-99")
-  puts mm-dd-yyyy("11-21-1999")
 end
