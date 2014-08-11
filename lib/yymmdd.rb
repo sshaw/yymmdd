@@ -81,6 +81,8 @@ module YYMMDD
 
     private
     def process(tok, part)
+      raise ArgumentError, "invalid format" unless part.is_a?(DatePart)
+
       @parts << [part, tok]
       return build_date if part.date
       self
