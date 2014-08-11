@@ -1,5 +1,7 @@
 # YYMMDD
 
+[![Build Status](https://travis-ci.org/sshaw/yymmdd.png?branch=master)](https://travis-ci.org/sshaw/yymmdd)
+
 Tiny DSL for idiomatic date parsing and formatting.
 
 ## Overview
@@ -13,9 +15,10 @@ Tiny DSL for idiomatic date parsing and formatting.
     date = ymd(411207)      # Date.new(1941, 12, 7)
 
     date = Date.today
-    puts ymd(date)          # 140809
     puts yyyy.mm.dd(date)   # 2014.08.09
     puts dd/mm/yy(date)     # 08/09/14
+    puts ymd(date)          # 1489
+	puts yymmdd(date)       # 140809
 
     date = yyyy.mm.dd("1941.12.07")  # Date.new(1941, 12, 7)
     date = mm.dd.yy("11.22.63")      # Date.new(1963, 11, 22)
@@ -45,8 +48,8 @@ When given a `Date` it will return a `String` in the specified format.
 
 An `ArgumentError` is raised if the date can't be parsed or formatted.
 
-With no arguments it will return an instance of a `String`-like object representing today's date in the specified format
-(it overrides `to_s` and `to_str`). In the most common cases you can treat it like a `String`:
+With no arguments it will return an instance of a `String`-like object (it overrides `to_s` and `to_str`) representing
+today's date in the specified format. In the most common cases you can treat it like a `String`:
 
     date = yyyy/mm/dd
 	puts "Today's date: #{date}"
@@ -62,7 +65,7 @@ All the heavy lifting is done by `Date#strftime` and `Date.strptime`.
 ### Format Specifiers
 
 The table below lists the available format specifiers. All of these can be separated by one of the supported
-delimiters; `"/"`, `"."`, or `"-"`.
+delimiters: `"/"`, `"."`, or `"-"`.
 
 <table>
   <thead>
@@ -92,6 +95,8 @@ delimiters; `"/"`, `"."`, or `"-"`.
 	</tr>
   </tbody>
 </table>
+
+There are also combined, delimiterless functions for all combinations of the above, e.g., `ymd`, `mdy`, `yymmdd`, etc...
 
 ## Caveats
 

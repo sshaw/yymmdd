@@ -9,23 +9,23 @@ module YYMMDD
     module_function abbr
   end
 
-  def yymmdd(date)
-    yy << mm << dd(date)
+  groups = FORMATS.group_by { |fmt| fmt[0] }
+  groups["y"].each do |y|
+    groups["m"].each do |m|
+      groups["d"].each do |d|
+        [y, m, d].permutation.each do |set|
+          name = set.join("")
+          module_eval(<<-YMD, __FILE__, __LINE__)
+            def #{name}(date = nil)
+              #{set[0]} << #{set[1]} << #{set[2]}(date)
+            end
+          YMD
+
+          module_function name
+        end
+      end
+    end
   end
-
-  module_function :yymmdd
-
-  alias_method :ymd, :yymmdd
-  module_function :ymd
-
-  def yyyymmdd(date)
-    yyyy << mm << dd(date)
-  end
-
-  module_function :yyyymmdd
-
-  alias_method :yyyymd, :yyyymmdd
-  module_function :yyyymd
 
   class DatePart # :nodoc:
     # Output formats
@@ -88,13 +88,13 @@ module YYMMDD
 
     def build_date
       date = @parts[-1][0].date || Date.today
-      date = date.to_s if date.is_a?(Fixnum)
 
       if date.is_a?(Date)
         fmt = @parts.map { |part, tok| sprintf("%s%s", tok, STRFTIME[part.format]) }.join("")
         date.strftime(fmt)
       else
-        fmt = @parts.map { |part, tok| sprintf("%s%s", tok, STRPTIME[part.format]) }.join("")
+        fmt  = @parts.map { |part, tok| sprintf("%s%s", tok, STRPTIME[part.format]) }.join("")
+        date = date.to_s if date.is_a?(Fixnum)
         Date.strptime(date, fmt)
       end
     end
